@@ -22,7 +22,7 @@
 #HW_OS := powerpc_macosx
 #HW_OS := universal_macosx
 #HW_OS := macosx_32_64
-HW_OS := macosx_64
+#HW_OS := macosx_64
 ##########################
 
 ##########################
@@ -34,7 +34,7 @@ HW_OS := macosx_64
 #MAC_OS_MIN_VERSION := 10.4
 #MAC_OS_MIN_VERSION := 10.5
 #MAC_OS_MIN_VERSION := 10.6
-MAC_OS_MIN_VERSION := 10.7
+#MAC_OS_MIN_VERSION := 10.7
 #MAC_OS_MIN_VERSION := 10.8
 
 ##########################
