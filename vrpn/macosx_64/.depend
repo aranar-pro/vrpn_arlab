@@ -1,2 +1,0 @@
-macosx_64/vrpn_LamportClock.o: vrpn_LamportClock.C vrpn_LamportClock.h vrpn_Types.h \
-  vrpn_Configure.h
