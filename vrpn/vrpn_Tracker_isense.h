@@ -9,8 +9,6 @@
 #include <sys/time.h>
 #endif
 
-#define VRPN_INCLUDE_INTERSENSE
-
 #include "vrpn_Tracker.h"
 #include "vrpn_Button.h"
 #include "vrpn_Analog.h"

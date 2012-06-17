@@ -1,7 +1,6 @@
 /*
  * This class was adapted from the GPSThing CNmeaParser class.
  * Originally written by Jason Bevins
- * Magellan $PASHR,POS implementation by Andrew Roth
  */
 
 #ifndef __NMEAPARSER_HPP
@@ -82,12 +81,6 @@ enum GPS_FIX_QUALITY
   FIX_RTCM = 1,
   FIX_CPD_FLOAT = 2,
   FIX_CPD_FIXED = 3,
-    //modes 4-8 from Z-family technical reference
-  FIX_RTK_SAT_FIXED = 4,
-  FIX_FLOAT_RTK = 5,
-  FIX_ESTIMATED_MODE = 6,
-  FIX_MANUAL_INPUT = 7,
-  FIX_SIMULATOR_MODE = 8,
   FIX_ALMANAC = 9
 };
 

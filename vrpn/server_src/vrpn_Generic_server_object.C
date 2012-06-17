@@ -96,7 +96,7 @@ void vrpn_Generic_Server_Object::closeDevices (void)
     delete dials[i];
   }
 #ifdef VRPN_INCLUDE_TIMECODE_SERVER
-  for (i = 0; i < num_timecode_generators; i++) {
+  for (i = 0; i < num_generators; i++) {
     if (verbose) {
       fprintf (stderr, "\nClosing timecode_generator %d ...", i);
     }
@@ -487,8 +487,8 @@ int vrpn_Generic_Server_Object::setup_Tracker_AnalogFly (char * & pch, char * li
   int i1;
   float f1;
   vrpn_Tracker_AnalogFlyParam     p;
-  vrpn_bool    absolute;
-  vrpn_bool    worldFrame = VRPN_FALSE;
+  bool    absolute;
+  bool    worldFrame = VRPN_FALSE;
 
   next();
 
@@ -607,7 +607,7 @@ int vrpn_Generic_Server_Object::setup_Tracker_AnalogFly (char * & pch, char * li
     }
   }
 
-  trackers[num_trackers] = new vrpn_Tracker_AnalogFly (s2, connection, &p, f1, absolute, VRPN_FALSE, worldFrame);
+  trackers[num_trackers] = new vrpn_Tracker_AnalogFly (s2, connection, &p, f1, absolute, false, worldFrame);
 
   if (!trackers[num_trackers]) {
     fprintf (stderr, "Can't create new vrpn_Tracker_AnalogFly\n");
@@ -4664,7 +4664,7 @@ int vrpn_Generic_Server_Object::setup_Tracker_RazerHydra (char * &pch, char * li
 
 int vrpn_Generic_Server_Object::setup_Tracker_zSight (char * & pch, char * line, FILE * config_file)
 {
-#ifdef	VRPN_USE_DIRECTINPUT
+#if defined(_WIN32) && defined(VRPN_USE_DIRECTINPUT) && defined(VRPN_HAVE_ATLBASE)
   char s2 [LINESIZE];
 
   next();
@@ -4696,7 +4696,7 @@ int vrpn_Generic_Server_Object::setup_Tracker_zSight (char * & pch, char * line,
 
   return 0;
 #else
-  fprintf (stderr, "vrpn_server: Can't open vrpn_Tracker_zSight: VRPN_USE_DIRECTINPUT not defined in vrpn_Configure.h!\n");
+  fprintf (stderr, "vrpn_server: Can't open vrpn_Tracker_zSight: VRPN_USE_DIRECTINPUT and/or VRPN_HAVE_ATLBASE not defined in vrpn_Configure.h!\n");
   return -1;
 #endif
 }
@@ -4839,7 +4839,7 @@ vrpn_Generic_Server_Object::vrpn_Generic_Server_Object (vrpn_Connection *connect
       }
 
       // copy for strtok work
-      strncpy (scrap, line, LINESIZE);
+      strncpy (scrap, line, LINESIZE - 1);
       // Figure out the device from the name and handle appropriately
 
       // WARNING: SUBSTRINGS WILL MATCH THE EARLIER STRING, SO

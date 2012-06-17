@@ -1000,11 +1000,6 @@ void NMEAParser::parseAndValidateFixQuality (const char* field)
     else if (fixQuality == 1) m_data->lastFixQuality = FIX_RTCM;
     else if (fixQuality == 2) m_data->lastFixQuality = FIX_CPD_FLOAT;
     else if (fixQuality == 3) m_data->lastFixQuality = FIX_CPD_FIXED;
-    else if (fixQuality == 4) m_data->lastFixQuality = FIX_RTK_SAT_FIXED;
-    else if (fixQuality == 5) m_data->lastFixQuality = FIX_FLOAT_RTK;
-    else if (fixQuality == 6) m_data->lastFixQuality = FIX_ESTIMATED_MODE;
-    else if (fixQuality == 7) m_data->lastFixQuality = FIX_MANUAL_INPUT;
-    else if (fixQuality == 8) m_data->lastFixQuality = FIX_SIMULATOR_MODE;
     else if (fixQuality == 9) m_data->lastFixQuality = FIX_ALMANAC;
     else
       {
@@ -1378,7 +1373,6 @@ bool NMEAParser::isKnownSentenceType (const char* sentence) const
   // Get the three letters after the '$xx'; this is the type of
   // sentence.  (Note the xx is the type of device which is sending
   // the string.  For example, GP = GPS, etc.)
-
   char sentenceType[4];
   memcpy (sentenceType, &(sentence[3]), 3);
   sentenceType[3] = '\0';
