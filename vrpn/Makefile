@@ -57,8 +57,7 @@
 # Mac OS X-specific options. If HW_OS is powerpc_macosx or universal_macosx,
 # uncomment one line below to choose the minimum targeted OS X version and
 # corresponding SDK. If none of the lines below is commented out, 10.5 will
-# be the minimum version.  If using 10.7 as min version, you need Xcode 4.3 
-# installed.  10.7/4.3 removes ppc and 32 bit support.  In Xcode 4.3 - you 
+# be the minimum version.  10.7/4.3 removes ppc support.  In Xcode 4.3 - you 
 # must now manually install command line tools from: 
 # Xcode menu > Preferences > Downloads.
 ##########################
@@ -67,7 +66,6 @@
 #MAC_OS_MIN_VERSION := 10.6
 #MAC_OS_MIN_VERSION := 10.7
 #MAC_OS_MIN_VERSION := 10.8
-
 
 INSTALL_DIR := /usr/local
 BIN_DIR := $(INSTALL_DIR)/bin
@@ -191,6 +189,16 @@ else
   endif
  endif
 endif
+ 
+ ifneq (,$(findstring macosx,$(HW_OS)))
+  ifeq ($(wildcard /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/$(MAC_OS_SDK)),/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/$(MAC_OS_SDK))
+		PATH_TO_DEV := /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/$(MAC_OS_SDK)
+$(info ---> Xcode 4.3+: Platform SDK found.  Setting dev path to $(PATH_TO_DEV)) 
+ else
+		PATH_TO_DEV := /Developer/SDKs/$(MAC_OS_SDK)
+$(info Xcode 4.3+: Platform SDK not found in /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/$(MAC_OS_SDK)!  Attempting to locate SDK in $(PATH_TO_DEV))
+  endif
+endif
 
   ifeq ($(HW_OS), powerpc_macosx)
         CC := $(MAC_GCC) -arch ppc -isysroot /Developer/SDKs/$(MAC_OS_SDK) -mmacosx-version-min=$(MAC_OS_MIN_VERSION)
@@ -207,18 +215,14 @@ endif
   endif
   
    ifeq ($(HW_OS), macosx_32_64)
-        CC := $(MAC_GCC) -arch i386 -arch x86_64 -isysroot /Developer/SDKs/$(MAC_OS_SDK) -mmacosx-version-min=$(MAC_OS_MIN_VERSION)
+        CC := $(MAC_GCC) -arch i386 -arch x86_64 -isysroot $(PATH_TO_DEV) -mmacosx-version-min=$(MAC_OS_MIN_VERSION)
         RANLIB := :
         AR := libtool -static -o
 	SYSLIBS := -framework CoreFoundation -framework IOKit -framework System
   endif
   
     ifeq ($(HW_OS), macosx_64)
-  		 ifeq ($(MAC_OS_SDK), MacOSX10.6.sdk)
-    		CC := $(MAC_GCC) -arch x86_64 -isysroot /Developer/SDKs/$(MAC_OS_SDK) -mmacosx-version-min=$(MAC_OS_MIN_VERSION)
-       else
-     		CC := $(MAC_GCC) -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/$(MAC_OS_SDK) -mmacosx-version-min=$(MAC_OS_MIN_VERSION)
-       endif
+     	CC := $(MAC_GCC) -arch x86_64 -isysroot $(PATH_TO_DEV) -mmacosx-version-min=$(MAC_OS_MIN_VERSION)
         RANLIB := :
         AR := libtool -static -o
 		SYSLIBS := -framework CoreFoundation -framework IOKit -framework System
