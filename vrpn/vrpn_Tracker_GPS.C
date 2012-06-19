@@ -78,6 +78,13 @@ vrpn_Tracker_Serial(name,c,port,baud)
     if (strlen(startSentence) > 0)
         nmeaParser.setStartSentence((char*)startSentence);
 	
+ // Set the hardware flow-control on the serial line in case
+  // the GPS unit requires it (some do).
+  if (serial_fd >= 0) {
+       vrpn_set_rts(serial_fd);
+       		FT_WARNING("Set RTS.\n");
+ }
+	
     register_server_handlers(); //-eb
 	
 }
@@ -97,7 +104,7 @@ vrpn_Tracker_GPS::~vrpn_Tracker_GPS()
 //---------------------------------
 void vrpn_Tracker_GPS::reset()
 {
-	printf("serial fd: %d\n",serial_fd);
+	//printf("serial fd: %d\n",serial_fd);
 	if (serial_fd >= 0)
 	{
 		FT_WARNING("Reset Completed (this is good).\n");
@@ -105,7 +112,7 @@ void vrpn_Tracker_GPS::reset()
 #ifdef _WIN32
         Sleep(100);
 #else
-        sleep(100);
+        usleep(100);
 #endif
 		status = vrpn_TRACKER_SYNCING;	// We're trying for a new reading
 	    
@@ -115,7 +122,7 @@ void vrpn_Tracker_GPS::reset()
 #ifdef _WIN32
         Sleep(1000);
 #else
-        sleep(1000);
+        usleep(1000);
 #endif //prevent the console from spamming us
 		status = vrpn_TRACKER_FAIL;
 	}
@@ -180,7 +187,7 @@ int vrpn_Tracker_GPS::get_report(void)
 #ifdef _WIN32
                 Sleep(10);
 #else
-                sleep(10);
+                usleep(10);
 #endif
 				return 0;
 			}
@@ -269,9 +276,9 @@ int vrpn_Tracker_GPS::get_report(void)
                  vel[1] = vel_data[1];
                  vel[2] = vel_data[2];
                  */
-#ifdef VERBOSE	
+//#ifdef VERBOSE	
                 printf("GPS pos: %f, %f, %f\n",pos[0],pos[1],pos[2]);
-#endif
+//#endif
                 nmeaParser.reset();
                 
                 //send report -eb
