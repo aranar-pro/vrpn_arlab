@@ -104,6 +104,11 @@ vrpn_Tracker_GPS::~vrpn_Tracker_GPS()
 //---------------------------------
 void vrpn_Tracker_GPS::reset()
 {
+
+ if (serial_fd >= 0) {
+       vrpn_set_rts(serial_fd);
+       		FT_WARNING("Set RTS during reset.\n");
+ }
 	//printf("serial fd: %d\n",serial_fd);
 	if (serial_fd >= 0)
 	{
@@ -112,7 +117,7 @@ void vrpn_Tracker_GPS::reset()
 #ifdef _WIN32
         Sleep(100);
 #else
-        usleep(100);
+        usleep(100000);
 #endif
 		status = vrpn_TRACKER_SYNCING;	// We're trying for a new reading
 	    
@@ -122,7 +127,7 @@ void vrpn_Tracker_GPS::reset()
 #ifdef _WIN32
         Sleep(1000);
 #else
-        usleep(1000);
+        sleep(1);
 #endif //prevent the console from spamming us
 		status = vrpn_TRACKER_FAIL;
 	}
@@ -187,7 +192,7 @@ int vrpn_Tracker_GPS::get_report(void)
 #ifdef _WIN32
                 Sleep(10);
 #else
-                usleep(10);
+                usleep(10000);
 #endif
 				return 0;
 			}
